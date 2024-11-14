@@ -1,4 +1,6 @@
-﻿using GLTest.Core.Domains.Products;
+﻿using GLTest.Core.Domains.Categories;
+using GLTest.Core.Domains.ProductCategory;
+using GLTest.Core.Domains.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,6 +12,10 @@ namespace GLTest.Core.DataModels
         {
             builder.HasKey(x => x.ProductId);
             builder.Property(x => x.ProductId).ValueGeneratedNever();
+
+
+            builder.HasMany(e => e.Categories)
+                    .WithMany(e => e.Products).UsingEntity<ProductCategory>();
         }
     }
 }
