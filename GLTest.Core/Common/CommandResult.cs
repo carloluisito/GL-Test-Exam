@@ -4,34 +4,34 @@
     {
         public T Result { get; private set; }
         public bool IsSuccessful => Error == null && !Errors.Any();
-        public (string Code, string Message)? Error { get; private set; }
-        public List<(string Code, string Message)?> Errors { get; private set; }
+        public ErrorModel? Error { get; private set; }
+        public List<ErrorModel?> Errors { get; private set; }
 
         public CommandResult(T terms)
         {
             Result = terms;
-            Errors = new List<(string Code, string Message)?>();
+            Errors = new List<ErrorModel?>();
         }
 
         public CommandResult(string errorCode, string errorMessage)
         {
-            Error = (errorCode ?? "ErrorCode missing", errorMessage ?? "Error message missing");
+            Error = new ErrorModel { Code = errorCode ?? "ErrorCode missing", Message = errorMessage ?? "Error message missing" };
         }
 
-        public CommandResult(List<(string Code, string Message)?> error)
+        public CommandResult(List<ErrorModel?> error)
         {
-            Errors = new List<(string Code, string Message)?>();
+            Errors = new List<ErrorModel?>();
             Errors.AddRange(error);
         }
 
         public CommandResult(string code, string[] errors)
         {
-            var collection = new List<(string Code, string Message)?>();
+            var collection = new List<ErrorModel?>();
             if (errors != null)
             {
                 foreach (var item in errors)
                 {
-                    collection.Add((code, item));
+                    collection.Add(new ErrorModel { Code = code, Message = item });
                 }
             }
 
@@ -40,12 +40,11 @@
 
         public CommandResult(string errorCode, string errorMessage, T result)
         {
-            Error = (errorCode ?? "ErrorCode missing", errorMessage ?? "Error message missing");
-            Error = (errorCode, errorMessage);
+            Error = new ErrorModel { Code = errorCode ?? "ErrorCode missing", Message = errorMessage ?? "Error message missing" };
             Result = result;
         }
 
-        public CommandResult((string Code, string Message) errorCode)
+        public CommandResult(ErrorModel errorCode)
         {
             Error = errorCode;
         }
